@@ -1,0 +1,8 @@
+{
+    "name": "winteryfox/discord.php",
+    "autoload": {
+        "psr-0" : {
+            "Weaverryan\\DangerZone" : "src"
+        }
+    }
+}

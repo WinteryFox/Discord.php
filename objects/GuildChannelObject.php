@@ -1,7 +1,8 @@
 <?php
 	include_once __DIR__ . '/Channel.php';
 	
-	class GuildChannel extends Channel {
+	abstract class GuildChannel extends Channel {
+		public $discordToken;
 		public $guild_id;
 		public $position;
 		public $permission_overwrites;
@@ -11,15 +12,16 @@
 		public $last_message_id;
 		public $parent_id;
 		
-		public function __construct($id) {
+		public function __construct($discordToken, $id) {
+			$this->discordToken = $discordToken;
 			$ch = curl_init();
 
-			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/channels/$id");
+			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/channels/{$id}");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
 			$headers = array();
-			$headers[] = "Authorization: Bot $discordToken";
+			$headers[] = "Authorization: Bot {$discordToken}";
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 			$result = curl_exec($ch);

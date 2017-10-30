@@ -84,11 +84,6 @@
 							</a>
 						</li>
 						<?php
-							include_once __DIR__ . '/DMChannel.php';
-							include_once __DIR__ . '/User.php';
-							include_once __DIR__ . '/GuildChannel.php';
-							include_once __DIR__ . '/Guild.php';
-							
 							session_start();
 						?>
 					</ul>
@@ -106,8 +101,13 @@
 		</div>
 		
 		<?php
-			$channel = new DMChannel(184097684024590336);
-			$channel->sendMessage("hi", '"color":3447003, "title":"Receipt for purchase", "description":"Just kidding, you didnt purchase nuffin", "footer":{"text": "You just got pranked m9"}');
+			include_once __DIR__ . '/DiscordClient.php';
+			
+			$client = new DiscordClient('Mjg5MzgxNzE0ODg1ODY5NTY4.DE2n6w.oYGYIvnXkPS98Foyqrsaucm6_q0');
+			//var_dump($client->getGuildChannel('288999138140356608')->getMessage('374511883031412746'));
+			$channel = $client->getGuildChannel('288999138140356608');
+			$message = $channel->getMessages(4);
+			var_dump($message);
 		?>
 		
 		<script src="./js/google-analytics.js"></script>

@@ -1,11 +1,12 @@
 <?php
-	include_once __DIR__ . '/GuildChannel.php';
 	include_once __DIR__ . '/Role.php';
 
 	class Guild {
+		public $discordToken;
 		public $id;
 		public $name;
 		public $icon;
+		public $icon_url;
 		public $splash;
 		public $owner_id;
 		public $region;
@@ -22,15 +23,16 @@
 		public $mfa_level;
 		public $widget_enabled;
 		
-		public function __construct($id) {
+		public function __construct($discordToken, $id) {
+			$this->discordToken = $discordToken;
 			$ch = curl_init();
 
-			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/guilds/$id");
+			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/guilds/{$id}");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
 			$headers = array();
-			$headers[] = "Authorization: Bot $discordToken";
+			$headers[] = "Authorization: Bot {$discordToken}";
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 			$result = curl_exec($ch);
@@ -43,6 +45,7 @@
 			$this->id = $result->id;
 			$this->name = $result->name;
 			$this->icon = $result->icon;
+			$this->icon_url = "https://cdn.discordapp.com/icons/{$this->id}/{$this->icon}.png";
 			$this->splash = $result->splash;
 			$this->owner_id = $result->owner_id;
 			$this->region = $result->region;

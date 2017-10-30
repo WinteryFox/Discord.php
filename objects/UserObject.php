@@ -1,21 +1,23 @@
 <?php
 	class User {
+		public $discordToken;
 		public $id;
 		public $username;
 		public $discriminator;
 		public $avatar;
-		public $avatarURL;
+		public $avatar_url;
 		public $dm;
 		
-		public function __construct($id) {
+		public function __construct($discordToken, $id) {
+			$this->discordToken = $discordToken;
 			$ch = curl_init();
 
-			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/users/$id");
+			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/users/{$id}");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 
 			$headers = array();
-			$headers[] = "Authorization: Bot $discordToken";
+			$headers[] = "Authorization: Bot {$discordToken}";
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 			$result = curl_exec($ch);
@@ -29,7 +31,7 @@
 			$this->username = $result->username;
 			$this->discriminator = $result->discriminator;
 			$this->avatar = $result->avatar;
-			$this->avatarURL = "https://cdn.discordapp.com/avatars/$this->id/$this->avatar.png";
+			$this->avatar_url = "https://cdn.discordapp.com/avatars/{$this->id}/{$this->avatar}.png";
 		}
 		
 		public function getOrCreateDMChannel() {
