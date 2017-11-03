@@ -1,27 +1,19 @@
 <?php
-	include_once __DIR__ . '/object/GuildObject.php';
+	include_once __DIR__ . '/api/Rest.php';
 
 	class DiscordClient {
-		public $discordToken;
+		public static $token;
 		
-		public function __construct($discordToken) {
-			$this->discordToken = $discordToken;
+		public function __construct($token) {
+			self::$token = $token;
 		}
 		
-		public function getGuild($guildId) {
-			return new Guild($this->discordToken, $guildId);
+		public function getChannel($id) {
+			return Rest::fetchChannel($id);
 		}
 		
-		public function getUser($userId) {
-			return new User($this->discordToken, $userId);
-		}
-		
-		public function getOrCreateDMChannel($recipientId) {
-			return new DMChannel($this->discordToken, $recipientId);
-		}
-		
-		public function getGuildChannel($channelId) {
-			return new GuildChannel($this->discordToken, $channelId);
+		public function getOrCreateDMChannel($id) {
+			return Rest::fetchDMChannel($id);
 		}
 	}
 ?>

@@ -102,12 +102,20 @@
 		
 		<?php
 			include_once __DIR__ . '/DiscordClient.php';
+			include_once __DIR__ . '/api/objects/Embed.php';
 			
 			$client = new DiscordClient('Mjg5MzgxNzE0ODg1ODY5NTY4.DE2n6w.oYGYIvnXkPS98Foyqrsaucm6_q0');
 			//var_dump($client->getGuildChannel('288999138140356608')->getMessage('374511883031412746'));
-			$channel = $client->getGuildChannel('288999138140356608');
-			$message = $channel->getMessages(4);
-			var_dump($message);
+			//$channel = $client->getGuildChannel('288999138140356608');
+			//$channel = $client->getChannel('288999138140356608');
+			$channel = $client->getOrCreateDMChannel('288996157202497536');
+			$builder = new EmbedBuilder();
+			$builder->withTitle('Hello');
+			$embed = $builder->build();
+			echo(json_encode($embed->expose()));
+			$channel->sendMessageAndEmbed('Hehe xd', $embed);
+			//$channel->sendMessageAndEmbed('Hehe xd', '');
+			
 		?>
 		
 		<script src="./js/google-analytics.js"></script>
