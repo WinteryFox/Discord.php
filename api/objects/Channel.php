@@ -123,8 +123,16 @@
 			return Rest::fetchHistory($this->id, $this->lastMessageID, $limit);
 		}
 		
+		public function sendMessage(String $content) {
+			Rest::postMessage($this->id, $content, (new EmbedBuilder())->build());
+		}
+		
+		public function sendEmbed(Embed $embed) {
+			Rest::postMessage($this->id, '', $embed);
+		}
+		
 		public function sendMessageAndEmbed(String $content, Embed $embed) {
-			Rest::postMessage($this->id, $content, json_encode($embed->expose()));
+			Rest::postMessage($this->id, $content, $embed);
 		}
 	}
 ?>

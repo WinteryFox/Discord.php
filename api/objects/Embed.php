@@ -8,11 +8,10 @@
 		protected $footer;
 		protected $image;
 		protected $thumbnail;
-		protected $video;
 		protected $author;
 		protected $fields;
 		
-		public function __construct($title, $description, $url, $timestamp, $color, $footer, $image, $thumbnail, $video, $author, $fields) {
+		public function __construct($title, $description, $url, $timestamp, $color, $footer, $image, $thumbnail, $author, $fields) {
 			$this->title = $title;
 			$this->description = $description;
 			$this->url = $url;
@@ -21,7 +20,6 @@
 			$this->footer = $footer;
 			$this->image = $image;
 			$this->thumbnail = $thumbnail;
-			$this->video = $video;
 			$this->author = $author;
 			$this->fields = $fields;
 		}
@@ -32,69 +30,41 @@
 	}
 	
 	class Thumbnail {
-		public function __construct($url, $proxy_url, $height, $width) {
+		public function __construct($url) {
 			$this->url = $url;
-			$this->proxy_url = $proxy_url;
-			$this->height = $height;
-			$this->width = $width;
 		}
 		
 		public $url;
-		public $proxy_url;
-		public $height;
-		public $width;
-	}
-	
-	class Video {
-		public function __construct($url, $height, $width) {
-			$this->url = $url;
-			$this->height = $height;
-			$this->width = $width;
-		}
-		
-		public $url;
-		public $height;
-		public $width;
 	}
 	
 	class Image {
-		public function __construct($url, $proxy_url, $height, $width) {
+		public function __construct($url) {
 			$this->url = $url;
-			$this->proxy_url = $proxy_url;
-			$this->height = $height;
-			$this->width = $width;
 		}
 		
 		public $url;
-		public $proxy_url;
-		public $height;
-		public $width;
 	}
 	
 	class Author {
-		public function __construct($name, $url, $icon_url, $proxy_icon_url) {
+		public function __construct($name, $url, $icon_url) {
 			$this->name = $name;
 			$this->url = $url;
 			$this->icon_url = $icon_url;
-			$this->proxy_icon_url = $proxy_icon_url;
 		}
 		
 		public $name;
 		public $url;
 		public $icon_url;
-		public $proxy_icon_url;
 	}
 	
 	class Footer {
-		public function __construct($text, $icon_url, $proxy_icon_url) {
+		public function __construct($text, $icon_url) {
 			$this->text = $text;
 			$this->icon_url = $icon_url;
-			$this->proxy_icon_url = $proxy_icon_url;
 		}
 		
 		public $text;
 		public $icon_url;
-		public $proxy_icon_url;
 	}
 	
 	class Field {
@@ -118,7 +88,6 @@
 		private $footer;
 		private $image;
 		private $thumbnail;
-		private $video;
 		private $author;
 		private $fields;
 		
@@ -131,7 +100,6 @@
 			$this->footer = null;
 			$this->image = null;
 			$this->thumbnail = null;
-			$this->video = null;
 			$this->author = null;
 			$this->fields = null;
 		}
@@ -167,39 +135,34 @@
 		}
 		
 		public function withColor(String $color) {
-			$this->color = $color;
+			$this->color = hexdec($color);
 			return $this;
 		}
 		
-		public function withFooter(String $text, $icon_url = null, $proxy_icon_url = null) {
-			$this->footer = new Footer($text, $icon_url, $proxy_icon_url);
+		public function withFooter(String $text, $icon_url = '') {
+			$this->footer = new Footer($text, $icon_url);
 			return $this;
 		}
 		
-		public function withImage(String $url, $proxy_url = null, $width = 0, $height = 0) {
-			$this->image = new Image($url, $proxy_url, $width, $height);
+		public function withImage(String $url) {
+			$this->image = new Image($url);
 			return $this;
 		}
 		
-		public function withThumbnail(String $url, $proxy_url = null, $width = 0, $height = 0) {
-			$this->thumbnail = new Thumbnail($url, $proxy_url, $width, $height);
+		public function withThumbnail(String $url) {
+			$this->thumbnail = new Thumbnail($url);
 			return $this;
 		}
 		
-		public function withVideo(String $url, $width = null, $height = null) {
-			$this->video = new Video($url, $width, $height);
+		public function withAuthor(String $name, $url = '', $icon_url = '') {
+			$this->author = new Author($name, $url, $icon_url);
 			return $this;
 		}
 		
-		public function withAuthor(String $name, $url = null, $icon_url = null, $icon_proxy_url = null) {
-			$this->author = new Author($name, $url, $icon_url, $icon_proxy_url);
-			return $this;
-		}
-		
-		public function appendField(String $name, String $value, boolean $inline) {
-			if (!$fields)
-				$fields = array();
-			$fields[] = new Field($name, $value, $inline);
+		public function appendField(String $name, String $value, bool $inline) {
+			if (!$this->fields)
+				$this->fields = array();
+			$this->fields[] = new Field($name, $value, $inline);
 			return $this;
 		}
 		
@@ -228,7 +191,7 @@
 					throw new Exception('Author name cannot be more than 256 characters long.');
 			}
 			
-			return new Embed($this->title, $this->description, $this->url, $this->timestamp, $this->color, $this->footer, $this->image, $this->thumbnail, $this->video, $this->author, $this->fields);
+			return new Embed($this->title, $this->description, $this->url, $this->timestamp, $this->color, $this->footer, $this->image, $this->thumbnail, $this->author, $this->fields);
 		}
 	}
 ?>

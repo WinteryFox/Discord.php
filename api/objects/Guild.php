@@ -2,66 +2,131 @@
 	include_once __DIR__ . '/Role.php';
 
 	class Guild {
-		public $discordToken;
-		public $id;
-		public $name;
-		public $icon;
-		public $icon_url;
-		public $splash;
-		public $owner_id;
-		public $region;
-		public $afk_channel_id;
-		public $afk_timeout;
-		public $embed_enabled;
-		public $embed_channel_id;
-		public $verification_level;
-		public $default_message_notifications;
-		public $explicit_content_filter;
-		public $roles;
-		public $emojis;
-		public $features;
-		public $mfa_level;
-		public $widget_enabled;
+		protected $id;
+		protected $name;
+		protected $icon;
+		protected $icon_url;
+		protected $splash;
+		protected $owner_id;
+		protected $region;
+		protected $afk_channel_id;
+		protected $afk_timeout;
+		protected $embed_enabled;
+		protected $embed_channel_id;
+		protected $verification_level;
+		protected $default_message_notifications;
+		protected $explicit_content_filter;
+		protected $roles;
+		protected $emojis;
+		protected $features;
+		protected $mfa_level;
+		protected $widget_enabled;
 		
-		public function __construct($discordToken, $id) {
-			$this->discordToken = $discordToken;
-			$ch = curl_init();
-
-			curl_setopt($ch, CURLOPT_URL, "https://discordapp.com/api/v6/guilds/{$id}");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-
-			$headers = array();
-			$headers[] = "Authorization: Bot {$discordToken}";
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-			$result = curl_exec($ch);
-			if (curl_errno($ch)) {
-				echo 'Error:' . curl_error($ch);
-			}
-			curl_close ($ch);
-			$result = json_decode($result);
-			
-			$this->id = $result->id;
-			$this->name = $result->name;
-			$this->icon = $result->icon;
-			$this->icon_url = "https://cdn.discordapp.com/icons/{$this->id}/{$this->icon}.png";
-			$this->splash = $result->splash;
-			$this->owner_id = $result->owner_id;
-			$this->region = $result->region;
-			$this->afk_channel_id = $result->afk_channel_id;
-			$this->afk_timeout = $result->afk_timeout;
-			$this->embed_enabled = $result->embed_enabled;
-			$this->embed_channel_id = $result->embed_channel_id;
-			$this->verification_level = $result->verification_level;
-			$this->default_message_notifications = $result->default_message_notifications;
-			$this->explicit_content_filter = $result->explicit_content_filter;
-			foreach ($result->roles as $role)
+		public function __construct($id, $name, $icon, $splash, $owner_id, $region, $afk_channel_id, $afk_timeout, $embed_enabled, $embed_channel_id, $verification_level, $default_message_notifications, $explicit_content_filter, $roles, $emojis, $features, $mfa_level, $widget_enabled) {
+			$this->id = $id;
+			$this->name = $name;
+			$this->icon = $icon;
+			$this->icon_url = "https://cdn.discordapp.com/icons/{$id}/{$icon}.png";
+			$this->splash = $splash;
+			$this->owner_id = $owner_id;
+			$this->region = $region;
+			$this->afk_channel_id = $afk_channel_id;
+			$this->afk_timeout = $afk_timeout;
+			$this->embed_enabled = $embed_enabled;
+			$this->embed_channel_id = $embed_channel_id;
+			$this->verification_level = $verification_level;
+			$this->default_message_notifications = $default_message_notifications;
+			$this->explicit_content_filter = $explicit_content_filter;
+			foreach ($roles as $role)
 				$this->roles[] = new Role($role->id, $role->name, $role->mentionable, $role->color, $role->position, $role->permissions);
-			$this->emojis = $result->emojis;
-			$this->features = $result->features;
-			$this->mfa_level = $result->mfa_level;
-			$this->widget_enabled = $result->widget_enabled;
+			$this->emojis = $emojis;
+			$this->features = $features;
+			$this->mfa_level = $mfa_level;
+			$this->widget_enabled = $widget_enabled;
+		}
+		
+		public function getID() {
+			return $this->id;
+		}
+		
+		public function getName() {
+			return $this->name;
+		}
+		
+		public function getIcon() {
+			return $this->icon;
+		}
+		
+		public function getIconURL() {
+			return $this->icon_url;
+		}
+		
+		public function getSplash() {
+			return $this->splash;
+		}
+		
+		public function getOwner() {
+			return Rest::fetchUser($this->owner_id);
+		}
+		
+		public function getOwnerID() {
+			return $this->owner_id;
+		}
+		
+		public function getRegion() {
+			return $this->region;
+		}
+		
+		public function getAFKChannel() {
+			return Rest::fetchChannel($this->afk_channel_id);
+		}
+		
+		public function getAFKChannelID() {
+			return $this->afk_channel_id;
+		}
+		
+		public function getAFKTimeout() {
+			return $this->afk_timeout;
+		}
+		
+		public function getEmbedEnabled() {
+			return $this->embed_enabled;
+		}
+		
+		public function getEmbedChannelID() {
+			return $this->embed_channel_id;
+		}
+		
+		public function getVerificationLevel() {
+			return $this->verification_level;
+		}
+		
+		public function getDefaultMessageNotifications() {
+			return $this->default_message_notifications;
+		}
+		
+		public function getExplicitContentFilter() {
+			return $this->explicit_content_filter;
+		}
+		
+		public function getRoles() {
+			return $this->roles;
+		}
+		
+		public function getEmojis() {
+			return $this->emojis;
+		}
+		
+		public function getFeatures() {
+			return $this->features;
+		}
+		
+		public function getMFALevel() {
+			return $this->mfa_level;
+		}
+		
+		public function getWidgetEnabled() {
+			return $this->widget_enabled;
 		}
 	}
 ?>
